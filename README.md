@@ -49,56 +49,8 @@ UEFI with GPT
 
 # Mount point  
 
-Partition  
-	
+![Screenshot_20191124_145857](https://user-images.githubusercontent.com/54496531/69492750-3b589600-0ecc-11ea-953b-035bc4c11412.png)
 
-Partition type  
-	
-
-Suggested size  
-	
-
- 
-
-/mnt/boot/efi  
-	
-
-/dev/sda2  
-	
-
-EFI system partition  
-	
-
-260–512 MiB  
-	
-
- 
-
-/mnt  
-	
-
-/dev/sdb4  
-	
-
-Linux x86-64 root (/)  
-	
-
-Remainder of the device  
-	
-
- 
-
-[SWAP]  
-	
-
-/dev/sdb5  
-	
-
-Linux swap  
-	
-
-More than 512 MiB  
-	
 
 # Format the partitions 
 
