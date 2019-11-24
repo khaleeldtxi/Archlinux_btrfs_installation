@@ -48,7 +48,6 @@ UEFI with GPT
 
 
 # Mount point  
-	
 
 Partition  
 	
