@@ -335,7 +335,138 @@ You are now being dropped into an emergency shell.
 A workaround is to remove btrfs from the HOOKS array in /etc/mkinitcpio.conf and instead add btrfs to the MODULES array. Then regenerate the initramfs with mkinitcpio -p linux (adjust the preset if needed) and reboot.  
 
  
+# Configure Snapper
+
+# Check if btrfs partition properly mounted: 
+ 
+
+$ sudo btrfs sub list /
+
+$ df -Th
+
+
+# Install snapper:
+
+$ sudo pacman -S snapper
+
+# Create config 
+
+$ sudo snapper -c root create-config /
+ 
+
+We'll get another subvoulme named .snapshots, check it by running: 
+ 
+
+$ sudo btrfs sub list /
+
+This is a problem, as we don't need this created subvolme as it's below / directory 
+
+So we'll delete this .snapshots subvolume, and manually create a new directory snapshots 
+
+
+$ sudo btrfs sub del /.snapshots/
+
+$ sudo mkdir /.snapshots
+
+Create snapshot mount point n fstab:
+
+$ sudo leafpad /etc/fstab
+ 
+
+Copy first line (/home) then edit it to look like this: 
+
+/dev/sdb4	
+
+/.snapshots 
+		
+
+btrfs 
+	
+
+Rw,relatime,compress=zstd,space_cache=v2,subvol=@snapshots
+	
+0	
+
+0 
 
  
+
+$ mount /.snapshots/
+
+
+Check if newly created snapshots directory is mounted as subvolume:
+
+$ df –Th
+
+
+$ sudo snapper list
+
+(no snapshots)
+ 
+
+# Download these packages: 
+
+$ yay -S grub-btrfs
+
+$ yay -S snap-pac
+ 
+
+$ less /etc/grub.d/41_snaphots-btrfs
+ 
+
+$ sudo leafpad /etc/default/grub
+ 
+
+Add the following under GRUB_CMDLINE_LINUX=""
+ 
+
+GRUB_BTRFS_CREATE_ONLY_HARMONIZED_ENTRIES="true"
+
+GRUB_BTRFS_LIMIT="10"
+ 
+
+Then save and close this file.
+ 
+
+$ sudo leafpad /etc/snapper/configs/root 
+
+NUMBER_CLEANUP="yes" 
+
+NUMBER_MIN_AGE="0" 
+
+NUMBER_LIMIT="12" 
+
+NUMBER_LIMIT_IMPORTANT="3" 
+
+TIMELINE_CREATE="no" 
+ 
+
+Then save and close this file.
+
+
+$ sudo systemctl start snapper-timeline.timer
+
+$ sudo systemctl enable snapper-timeline.timer
+
+$ sudo systemctl start snapper-cleanup.timer
+
+$ sudo systemctl enable snapper-cleanup.timer
+
+ 
+
+$ systemctl status cronie.service
+
+ 
+
+$ yay -S snap-pac-grub
+
+ 
+
+# Check snapshots created 
+ 
+
+$ sudo snapper list
+
+
 
  
