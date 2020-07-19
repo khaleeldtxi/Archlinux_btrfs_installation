@@ -34,6 +34,7 @@ Use timedatectl to ensure the system clock is accurate:
 `timedatectl set-ntp true`
 
 To check the service status, use:
+
 `timedatectl status`
 
   
@@ -49,7 +50,7 @@ Use fdisk, gdisk, parted, cfdisk or cgdisk to modify partition tables, for examp
 ## UEFI with GPT  
 
 
-# Mount point
+### Mount point
 
 | Mount point | Partition | Partition type | Suggested size |
 |---|---|---|---|
@@ -71,66 +72,66 @@ Once the partitions have been created, each must be formatted with an appropriat
 
 After formatting the disk with btrfs, we can now proceed to create subvolumes as follows: 
 
-`mount /dev/sda5 /mnt
+`mount /dev/sda5 /mnt`
 
-btrfs su cr /mnt/@
+`btrfs su cr /mnt/@`
 
-btrfs su cr /mnt/@home
+`btrfs su cr /mnt/@home`
 
-btrfs su cr /mnt/@var
+`btrfs su cr /mnt/@var`
 
-btrfs su cr /mnt/@srv
+`btrfs su cr /mnt/@srv`
 
-btrfs su cr /mnt/@opt
+`btrfs su cr /mnt/@opt`
 
-btrfs su cr /mnt/@tmp
+`btrfs su cr /mnt/@tmp`
 
-btrfs su cr /mnt/@swap
+`btrfs su cr /mnt/@swap`
 
-btrfs subvolume create /mnt/@log
+`btrfs subvolume create /mnt/@log`
 
-btrfs subvolume create /mnt/@pkg
+`btrfs subvolume create /mnt/@pkg`
 
-btrfs su cr /mnt/@snapshots`
+`btrfs su cr /mnt/@snapshots`
 
   
 # Mount subvolumes: 
 
-`umount /mnt 
+`umount /mnt` 
 
-mount -o noatime,compress=zstd,space_cache=v2,commit=120,ssd,subvol=@ /dev/sda5 /mnt
+`mount -o noatime,compress=zstd,space_cache=v2,commit=120,ssd,subvol=@ /dev/sda5 /mnt`
 
-mkdir -p /mnt/{boot,home,var,srv,opt,tmp,.snapshots,btrfs}
+`mkdir -p /mnt/{boot,home,var,srv,opt,tmp,.snapshots,btrfs}`
 
-mount -o noatime,compress=zstd,space_cache=v2,commit=120,subvol=@home /dev/sdb4 /mnt/home
+`mount -o noatime,compress=zstd,space_cache=v2,commit=120,subvol=@home /dev/sdb4 /mnt/home`
 
-mount -o noatime,compress=zstd,space_cache=v2,commit=120,subvol=@srv /dev/sdb5 /mnt/srv
+`mount -o noatime,compress=zstd,space_cache=v2,commit=120,subvol=@srv /dev/sdb5 /mnt/srv`
 
-mount -o noatime,compress=zstd,space_cache=v2,commit=120,subvol=@opt /dev/sdb5 /mnt/opt
+`mount -o noatime,compress=zstd,space_cache=v2,commit=120,subvol=@opt /dev/sdb5 /mnt/opt`
 
-mount -o noatime,compress=zstd,space_cache=v2,commit=120,subvolid=5 /dev/sda5 /mnt/btrfs
+`mount -o noatime,compress=zstd,space_cache=v2,commit=120,subvolid=5 /dev/sda5 /mnt/btrfs`
 
-mount -o noatime,compress=zstd,space_cache=v2,commit=120,subvol=@tmp /dev/sda5 /mnt/tmp
+`mount -o noatime,compress=zstd,space_cache=v2,commit=120,subvol=@tmp /dev/sda5 /mnt/tmp`
 
-mount -o noatime,compress=zstd,space_cache=v2,commit=120,subvol=@snapshots /dev/sda5 /mnt/.snapshots
+`mount -o noatime,compress=zstd,space_cache=v2,commit=120,subvol=@snapshots /dev/sda5 /mnt/.snapshots`
 
-mount -o nodatacow,subvol=@swap /dev/sda5 /mnt/swap
+`mount -o nodatacow,subvol=@swap /dev/sda5 /mnt/swap`
 
-mount -o nodatacow,subvol=@var /dev/sda5 /mnt/var
+`mount -o nodatacow,subvol=@var /dev/sda5 /mnt/var`
 
-mount /dev/sda2 /mnt/boot`
+`mount /dev/sda2 /mnt/boot`
 
   
 # Check if partition mounted correctly: 
 
-`df –Th
+`df –Th`
 
-free –h`
+`free –h`
 
   
 # Install the base packages: 
 
-# Use the pacstrap script to install the base package group: 
+## Use the pacstrap script to install the base package group: 
 
 `pacstrap /mnt base base-devel linux linux-headers linux-firmware bash-completion btrfs-progs dosfstools grub grub-btrfs efibootmgr sysfsutils usbutils e2fsprogs mtools inetutils dhcpcd nano less man-db man-pages texinfo vim git networkmanager network-manager-applet reflector bluex bluez-utils xdg-utils xdg-user-dirs snapper`
 
@@ -158,21 +159,21 @@ Change root into the new system:
 
 # Swap file
 
-`truncate -s 0 /swap/swapfile
+`truncate -s 0 /swap/swapfile`
 
-chattr +C /swap/swapfile
+`chattr +C /swap/swapfile`
 
-btrfs property set /swap/swapfile compression none
+`btrfs property set /swap/swapfile compression none`
 
-dd if=/dev/zero of=/swap/swapfile bs=4G count=2 statys=progress
+`dd if=/dev/zero of=/swap/swapfile bs=4G count=2 statys=progress`
 
-chmod 600 /swap/swapfile
+`chmod 600 /swap/swapfile`
 
-mkswap /swap/swapfile
+`mkswap /swap/swapfile`
 
-swapon /swap/swapfile
+`swapon /swap/swapfile`
 
-nano /etc/fstab`
+`nano /etc/fstab`
 
 Enter swap file mount point in fstab: 
 
@@ -298,37 +299,37 @@ Storage=volatile
 
 # Add User
 
-`useradd -mG wheel khaleel
+`useradd -mG wheel khaleel`
 
-passwd khaleel
+`passwd khaleel`
 
-EDITIOR=nano visudo
+`EDITIOR=nano visudo`
 
 uncomment line - wheel ALL=(ALL) ALL
 
-pacman -S openssh
+`pacman -S openssh`
 
-systemctl enable sshd
+`systemctl enable sshd`
 
-sudo btrfs subvol list -p /
+`sudo btrfs subvol list -p /`
 
-sudo pacman -S nvidia nvidia-utils nvidia-settings xorg-server-devel plasma-meta sddm dolphin kate
+`sudo pacman -S nvidia nvidia-utils nvidia-settings xorg-server-devel plasma-meta sddm dolphin kate`
 
-exit
+`exit`
 
-umount -a
+`umount -a`
 
-reboot`
+`reboot`
 
 # Install yay
 
-`sudo pacman -S git 
+`sudo pacman -S git`
 
-git clone https://aur.archlinux.org/yay.git 
+`git clone https://aur.archlinux.org/yay.git`
 
-cd yay 
+`cd yay`
 
-makepkg -sirc`
+`makepkg -sirc`
 
 
  
@@ -336,13 +337,13 @@ makepkg -sirc`
 
 # Check if btrfs partition properly mounted:
 
-`sudo btrfs sub list /
+`sudo btrfs sub list /`
 
-df -Th`
+`df -Th`
 
-`sudo umount /.snapshots/
+`sudo umount /.snapshots/`
 
-sudo rm -rf /.snapshots/`
+`sudo rm -rf /.snapshots/`
 
 
 # Install snapper (if not already installed while installing Arch):
@@ -351,45 +352,45 @@ sudo rm -rf /.snapshots/`
 
 # Create config
 
- `sudo snapper -c root create-config / 
+ `sudo snapper -c root create-config /`
 
-kate /etc/snapper/configs/root 
+`kate /etc/snapper/configs/root`
 
-sudo chmod a+rx /.snapshots/ 
+`sudo chmod a+rx /.snapshots/`
 
-yay -S snap-pac 
+`yay -S snap-pac`
 
-kate /etc/default/grub` 
+`kate /etc/default/grub` 
 
 Add the following under `GRUB_CMDLINE_LINUX=""`
  
-`GRUB_BTRFS_CREATE_ONLY_HARMONIZED_ENTRIES="true"
+`GRUB_BTRFS_CREATE_ONLY_HARMONIZED_ENTRIES="true"`
 
-GRUB_BTRFS_LIMIT="10"`
-
-Then save and close this file.
-
-`kate /etc/snapper/configs/root
-
-NUMBER_CLEANUP="yes"
-
-NUMBER_MIN_AGE="0"
-
-NUMBER_LIMIT="12"
-
-NUMBER_LIMIT_IMPORTANT="3"
-
-TIMELINE_CREATE="no"` 
+`GRUB_BTRFS_LIMIT="10"`
 
 Then save and close this file.
 
-`sudo systemctl start snapper-timeline.timer
+`kate /etc/snapper/configs/root`
 
-sudo systemctl enable snapper-timeline.timer
+`NUMBER_CLEANUP="yes"`
 
-sudo systemctl start snapper-cleanup.timer
+`NUMBER_MIN_AGE="0"`
 
-sudo systemctl enable snapper-cleanup.timer`
+`NUMBER_LIMIT="12"`
+
+`NUMBER_LIMIT_IMPORTANT="3"`
+
+`TIMELINE_CREATE="no"`
+
+Then save and close this file.
+
+`sudo systemctl start snapper-timeline.timer`
+
+`sudo systemctl enable snapper-timeline.timer`
+
+`sudo systemctl start snapper-cleanup.timer`
+
+`sudo systemctl enable snapper-cleanup.timer`
  
 
 # Check snapshots created
