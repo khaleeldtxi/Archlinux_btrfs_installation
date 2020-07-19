@@ -8,7 +8,7 @@ You will be logged in on the first virtual console as the root user, and present
 
 If UEFI mode is enabled on an UEFI motherboard, Archiso will boot Arch Linux accordingly via systemd-boot. To verify this, list the efivars directory:
 
-$ ls /sys/firmware/efi/efivars
+`ls /sys/firmware/efi/efivars`
 
 If the directory does not exist, the system may be booted in BIOS or CSM mode. Refer to your motherboard's manual for details.
 
